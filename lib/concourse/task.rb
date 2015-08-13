@@ -11,7 +11,7 @@ module Concourse
       end
     end
 
-    def initialize(name: ,config:)
+    def initialize(name:, config:)
       @name   = name
       @config = config
     end
@@ -25,7 +25,7 @@ module Concourse
                     command   = [config['run']['path']] + config['run']['args']
                     image     = config['image'].sub('docker:///', '')
                     container = Docker::Container.create('Cmd' => command, 'Image' => image, 'Tty' => true)
-                    container.rename("concourse-task-#{name}")
+                    container.rename("concourse-task-#{name}-#{Time.now.to_i}")
                     container
                   end
     end

@@ -7,7 +7,7 @@ module Concourse
 
     def initialize(filename:)
       @filename = filename
-      @jobs = Job.from_manifest(manifest['jobs'])
+      @jobs = Job.from_manifest(jobs: manifest['jobs'])
     end
 
     private

@@ -1,18 +1,18 @@
-require_relative 'task'
+require_relative 'plan'
 
 module Concourse
   class Job
-    attr_reader :tasks
+    attr_reader :plan
 
-    def self.from_manifest(jobs)
+    def self.from_manifest(jobs:)
       jobs.inject({}) do |j, job|
-        j[job.fetch('name')] = Job.new(tasks: job.fetch('plan'))
+        j[job.fetch('name')] = Job.new(steps: job.fetch('plan'))
         j
       end
     end
 
-    def initialize(tasks:)
-      @tasks = Task.from_manifest(tasks: tasks)
+    def initialize(steps:)
+      @plan = Plan.new(steps: steps)
     end
   end
 end

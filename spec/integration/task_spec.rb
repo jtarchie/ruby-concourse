@@ -6,7 +6,7 @@ module Concourse
 
     context 'when the task say-hello has run' do
       it 'has an output' do
-        task = pipeline.jobs['hello-world'].tasks['say-hello']
+        task = pipeline.jobs['hello-world'].plan.tasks['say-hello']
         task.execute!
 
         expect(task.output.chomp).to eq 'Hello, world!'

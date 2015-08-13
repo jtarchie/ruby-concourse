@@ -4,4 +4,5 @@ gem 'docker-api'
 
 group :development do
   gem 'rspec'
+  gem 'pry'
 end
