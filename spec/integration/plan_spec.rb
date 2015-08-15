@@ -10,7 +10,7 @@ module Concourse
         plan = pipeline.jobs['hello-world'].plan
         plan.execute!
 
-        expect(plan.output).to eq ["Hello, world!\r\n"]
+        expect(plan.output).to eq ["Hello, world!\n"]
       end
     end
   end

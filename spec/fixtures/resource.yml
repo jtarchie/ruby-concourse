@@ -1,0 +1,5 @@
+resources:
+  - name: empty-git
+    type: git
+    source:
+      uri: https://github.com/jtarchie/empty

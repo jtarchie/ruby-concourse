@@ -1,4 +1,4 @@
-require 'docker'
+require_relative 'docker_container'
 
 module Concourse
   class Task
@@ -17,16 +17,17 @@ module Concourse
     end
 
     def output
-      @output ||= container.tap(&:start!).logs(stdout: true)
+      @output ||= container.output
     end
 
     def execute!
       @container ||= begin
                     command   = [config['run']['path']] + config['run']['args']
-                    image     = config['image'].sub('docker:///', '')
-                    container = Docker::Container.create('Cmd' => command, 'Image' => image, 'Tty' => true)
-                    container.rename("concourse-task-#{name}-#{Time.now.to_i}")
-                    container
+                    DockerContainer.new(
+                      image: config['image'],
+                      command: command,
+                      name: "concourse-task-#{name}-#{Time.now.to_i}",
+                    )
                   end
     end
   end
