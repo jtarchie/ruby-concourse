@@ -8,7 +8,7 @@ module Concourse
     context 'when the plan has run' do
       it 'has multiple outputs' do
         plan = pipeline.jobs['hello-world'].plan
-        plan.execute!
+        plan.execute!(pipeline: pipeline)
 
         expect(plan.output).to eq ["Hello, world!\n"]
       end

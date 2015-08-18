@@ -3,11 +3,12 @@ require 'shellwords'
 
 module Concourse
   class DockerContainer
-    def initialize(image:, command:, stdin: "", name:)
+    def initialize(image:, command:, stdin: "", name:, volumes: [])
       @image     = image
       @command   = command
       @name      = name
       @stdin     = stdin
+      @volumes   = volumes
     end
 
     def image
@@ -19,8 +20,16 @@ module Concourse
         -i \
         --name #{@name} \
         #{image.to_s} \
-      #{@command.shelljoin}
+        #{@command.shelljoin}
       `
+    end
+
+    private
+
+    def volumes_as_cli
+      @volumes.collect do |volume|
+        "-v"
+      end
     end
   end
 end

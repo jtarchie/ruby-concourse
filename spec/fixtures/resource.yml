@@ -3,3 +3,17 @@ resources:
     type: git
     source:
       uri: https://github.com/jtarchie/empty
+
+jobs:
+  - name: first-sha
+    plan:
+      - get: empty-git
+      - task: get-sha
+        config:
+          platform: linux
+          image: docker:///concourse/git-resource
+          inputs:
+            - empty-git
+          run:
+            path: sh
+            args: ['-c', 'cd empty-git && git log --format=%H | tail -1']

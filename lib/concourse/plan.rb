@@ -1,3 +1,4 @@
+require_relative 'step'
 require_relative 'task'
 
 module Concourse
@@ -5,16 +6,19 @@ module Concourse
     attr_reader :output, :steps
 
     def initialize(steps:)
-      @steps = Task.from_manifest(tasks: steps)
+      @steps = Step.from_manifest(steps: steps)
     end
 
     def tasks
-      @steps
+      @tasks ||= steps.inject({}) do |tasks, step|
+        tasks[step.name] = step if step.is_a? Task
+        tasks
+      end
     end
 
-    def execute!
-      @output ||= steps.collect do |name, step|
-        step.execute!
+    def execute!(pipeline:)
+      @output ||= steps.collect do |step|
+        step.execute!(pipeline: pipeline)
         step.output
       end
     end

@@ -33,16 +33,43 @@ module Concourse
     def check!
       @container ||= begin
                        command    = ['/opt/resource/check']
-                       image_type = RESOURCES.fetch(type)
                        DockerContainer.new(
                          image: image_type,
                          command: command,
-                         name: "concourse-resource-#{name}-#{Time.now.to_i}",
+                         name: container_name,
                          stdin: JSON.generate({
                            source: source
                          })
                        )
                      end
+    end
+
+    def in!(params:, ref:)
+      @container ||= begin
+                       Dir.mktmpdir do |tmp_dir|
+                         command = ['/opt/resource/in', tmp_dir]
+                         DockerContainer.new(
+                           image: image_type,
+                           command: command,
+                           name: container_name,
+                           stdin: JSON.generate({
+                             params: params,
+                             source: source,
+                             version: { ref: ref }
+                           })
+                         )
+                       end
+                     end
+    end
+
+    private
+
+    def image_type
+      RESOURCES.fetch(type)
+    end
+
+    def container_name
+      "concourse-resource-#{name}-#{Time.now.to_i}"
     end
   end
 end

@@ -4,11 +4,8 @@ module Concourse
   class Task
     attr_reader :config, :container, :name
 
-    def self.from_manifest(tasks:)
-      tasks.inject({}) do |t, task|
-        t[task['task']] = Task.new(name: task['task'], config: task['config'])
-        t
-      end
+    def self.from_manifest(task:)
+      Task.new(name: task['task'], config: task['config'])
     end
 
     def initialize(name:, config:)
@@ -20,7 +17,7 @@ module Concourse
       @output ||= container.output
     end
 
-    def execute!
+    def execute!(pipeline:)
       @container ||= begin
                     command   = [config['run']['path']] + config['run']['args']
                     DockerContainer.new(

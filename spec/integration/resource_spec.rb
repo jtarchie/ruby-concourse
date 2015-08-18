@@ -14,6 +14,13 @@ module Concourse
           { 'ref' => '10105bc3bf4f7a2389b21981aee35799f8d1f82c' }
         ]
       end
+
+      it 'gets the resource' do
+        plan = pipeline.jobs['first-sha'].plan
+        plan.execute!(pipeline: pipeline)
+
+        expect(plan.output).to eq ["", "24c8e0edc4e01c45639d0243e1f6a656b670bfb7"]
+      end
     end
   end
 end
